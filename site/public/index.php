@@ -1,4 +1,4 @@
 <?php
-    require('../vendor/autoload.php');
-    include('./frases.php');
+    require __DIR__ . '/../bootstrap/app.php';
+    $aApp -> run();
 ?>
