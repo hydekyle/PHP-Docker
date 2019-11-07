@@ -28,42 +28,11 @@ $aApp -> get('/mifrase', function($request, $response, $args){
   return $frases[$num];
 });
 
-$aApp -> get('/pokemon/id/{id}', function ($request, $response, $args) {
-  $pokemons = json_decode(file_get_contents($this -> db['path'] . '/' . $this -> db['filename']), true);
-  $pokeID = $args['id'] - 1;
-  if ($pokeID >= 0 && $pokeID < count($pokemons)) 
-    show_pokemon($pokemons[$pokeID]);
-  else 
-    echo "El pokémon " . $args['id'] . " no se encuentra en la pokédex.";
-});
+$aApp -> get('/pokemon/id/{id}', Pokemon_Controller::Class . ':get_by_id');
 
-$aApp -> get('/pokemon/name/{name}', function ($request, $response, $args) {
-  $pokemons = json_decode(file_get_contents($this -> db['path'] . '/' . $this -> db['filename']), true);
-  $name = strtolower($args['name']);
-  $my_array = []; //Rehago el array para que la clave sea el nombre y no el id.
-  foreach ($pokemons as $poke) $my_array[$poke['name']] = $poke;
-  if ($my_array[$name] != null) 
-    show_pokemon($my_array[$name]);
-  else 
-    echo "El pokémon " . $args['name'] . " no ha sido encontrado.";
-});
+$aApp -> get('/pokemon/name/{name}', Pokemon_Controller::Class . ':get_by_name');
 
-function show_pokemon($poke){
-  $strTypes = '';
-  $typesAmount = count($poke['types']);
-  // for ($i = 0; $i < $typesAmount; $i++) {
-  //     $strTypes .= $poke['types'][0] + ", ";
-  // }
-  foreach($poke['types'] as $type){
-    $strTypes .= " $type +";
-  }
-  $strHTML = '';
-  $strHTML .= '<strong>ID: </strong>' . $poke['id'] . '<br>';
-  $strHTML .= '<strong>Nombre: </strong>' . $poke['name'] . '<br>';
-  $strHTML .= '<strong>TIPO: </strong>' . substr($strTypes, 0, -1) . '<br>';
-
-  echo $strHTML;
-}
+$aApp -> get('/pokemon/tid/{id}', Pokemon_Controller::Class . ':twig_get_by_id');
 
 ///////////////////////////
 
