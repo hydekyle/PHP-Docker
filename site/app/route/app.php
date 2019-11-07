@@ -32,7 +32,8 @@ $aApp -> get('/pokemon/id/{id}', Pokemon_Controller::Class . ':get_by_id');
 
 $aApp -> get('/pokemon/name/{name}', Pokemon_Controller::Class . ':get_by_name');
 
-$aApp -> get('/pokemon/tid/{id}', Pokemon_Controller::Class . ':twig_get_by_id') -> add(Poke_Middleware::class);
+$aApp -> get('/pokemon/tid/{id}', Pokemon_Controller::Class . ':twig_get_by_id') 
+  -> add(Poke_Middleware::class);
 
 ///////////////////////////
 

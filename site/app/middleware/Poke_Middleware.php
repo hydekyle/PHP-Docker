@@ -13,11 +13,11 @@ class Poke_Middleware {
     public function __construct (Container $cContainer) { $this -> cContainer = $cContainer; }
     public function __invoke (Request $rRequest, Response $rResponse, $cNext) {
 
-    $rResponse -> getBody() -> write('BEFORE ');
+    $rResponse -> getBody() -> write('////////////////////////////<br> ');
 
     $rResponse = $cNext($rRequest, $rResponse);
 
-    $rResponse -> getBody() -> write(' AFTER');
+    $rResponse -> getBody() -> write('////////////////////////////');
 
     return $rResponse;
 
