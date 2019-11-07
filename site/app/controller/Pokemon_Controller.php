@@ -3,7 +3,6 @@
 namespace Controller;
 
 use Psr\Container\ContainerInterface as Container,
-
     Psr\Http\Message\ServerRequestInterface as Request,
     Psr\Http\Message\ResponseInterface as Response,
 
@@ -36,7 +35,7 @@ class Pokemon_Controller {
 
   protected function show_pokemon($poke){
     $strTypes = '';
-    $typesAmount = count($poke['types']);
+    //$typesAmount = count($poke['types']);
     foreach($poke['types'] as $type) 
       $strTypes .= " $type +";
     $strHTML = '';
@@ -47,7 +46,14 @@ class Pokemon_Controller {
     echo $strHTML;
   }
 
-  public function get_pokemon($id){
+  protected function types_to_string($types){
+    $strTypes = '';
+    foreach($types as $t) 
+      $strTypes .= " $t +";
+    return $strTypes;
+  }
+
+  protected function get_pokemon($id){
     $pokemons = json_decode(file_get_contents($this -> cContainer -> db['path'] . '/' . $this -> cContainer -> db['filename']), true);
     $pokeID = $id - 1;
     if ($pokeID >= 0 && $pokeID < count($pokemons)) 
@@ -84,11 +90,14 @@ class Pokemon_Controller {
       $aParameters = [
         'aPage' =>  [
           'poke_id' => $pokeID,
-          'poke_name' => $pokemon['name']
+          'poke_name' => $pokemon['name'],
+          'poke_types' => substr($this -> types_to_string($pokemon['types']), 0, -1)
         ]
       ];
       return $this -> cContainer -> view -> render($rResponse, 'pokedex.twig', $aParameters);
-    }  
+    }  else{
+      return "Pokémon no encontrado";
+    }
   }
   
 }

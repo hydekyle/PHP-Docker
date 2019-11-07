@@ -44,3 +44,5 @@ $aContainer['Pokemon_Controller'] = function ($cContainer) { return new \Control
 $aContainer['Phrases_Controller'] = function ($cContainer) { return new \Controller\Phrases_Controller($cContainer); };
 
 $aContainer['DB_Middleware'] = function ($cContainer) { return new \Middleware\DB_Middleware($cContainer); };
+$aContainer['Poke_Middleware'] = function ($cContainer) { return new \Middleware\Poke_Middleware($cContainer); };
+
