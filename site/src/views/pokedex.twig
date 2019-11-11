@@ -1,11 +1,67 @@
 <!doctype html>
 <html>
   <head>
-    <title>Pokédex: {{ aPage.poke_name }}</title>
+    <title>Pokédex: {{ aPage.poke_name }} </title>
   </head>
+
   <body>
-    <strong>{{aPage.poke_name}}</strong>
-    <strong>   #</strong>{{aPage.poke_id}} <br>
-    <p> {{aPage.poke_types}} </p>
+    <strong class="poke_name" style="color:red;"></strong>
+    <strong>#</strong>{{aPage.poke_id}} <br>
+    <img src="{{aPage.img_route}}" alt="Pokemon{{aPage.poke_id}}" height="120" width="120"> <br>
+    <p id="type1"></p>
+    <p id="type2"></p>
   </body>
+
+  <script>
+    let myName = " {{aPage.poke_name}} ";
+    
+    document.querySelector(".poke_name").innerHTML = myName.toUpperCase();
+    
+
+  showTypes();
+
+
+
+    function showTypes(){
+      let myTypes = " {{aPage.poke_types}} ";
+      let types = myTypes.split('+');
+      let type1 = types[0].replace(/ /g,'');
+      let dType1 = document.querySelector("#type1");
+      let dType2 = document.querySelector("#type2");
+      dType1.innerHTML = type1;
+      dType1.style.color = getColorByType(type1);
+      if (types.length > 1){
+        let type2 = types[1].replace(/ /g,'');
+        dType2.innerHTML = type2;
+        dType2.style.color = getColorByType(type2);
+      }
+        
+    }
+
+    function getColorByType(type){
+      console.log(type);
+      switch(type){
+        case 'bug': return 'green';
+        case 'fire': return 'red';
+        case 'normal': return 'white';
+        case 'dark': return 'black';
+        case 'flying': return 'darkslategrey';
+        case 'poison': return 'cadetblue';
+        case 'dragon': return 'cyan';
+        case 'ghost': return 'darkgrey';
+        case 'psychic': return 'pink';
+        case 'electric': return 'yellow';
+        case 'grass': return 'green';
+        case 'rock': return 'brown';
+        case 'fairy': return 'pink';
+        case 'ground': return 'lightpink';
+        case 'steel': return 'grey';
+        case 'fighting': return 'brown';
+        case 'ice': return 'lightseagreen';
+        case 'water': return 'dodgerblue';
+      }
+    }
+
+  </script>
+
 </html>

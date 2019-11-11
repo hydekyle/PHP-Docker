@@ -11,8 +11,12 @@ use Psr\Container\ContainerInterface as Container,
 class Pokemon_Controller {
 
   protected $cContainer;
+  protected $strImages;
 
-  public function __construct (Container $cContainer) { $this -> cContainer = $cContainer; }
+  public function __construct (Container $cContainer) { 
+    //$this -> strImages = obtener la ruta de las imagenes carpeta
+    $this -> cContainer = $cContainer; 
+  }
 
   public function getall (Request $rRequest, Response $rResponse) {
 
@@ -91,13 +95,28 @@ class Pokemon_Controller {
         'aPage' =>  [
           'poke_id' => $pokeID,
           'poke_name' => $pokemon['name'],
-          'poke_types' => substr($this -> types_to_string($pokemon['types']), 0, -1)
+          'poke_types' => substr($this -> types_to_string($pokemon['types']), 0, -1),
+          'img_route' => $this -> get_png_route($pokeID)
         ]
       ];
       return $this -> cContainer -> view -> render($rResponse, 'pokedex.twig', $aParameters);
-    }  else{
+    } 
+    else
       return "Pokémon no encontrado";
+  }
+
+  protected function get_png_route($id){
+    $aConfig = $this -> cContainer -> get('config');
+    $ruta = $aConfig['pokeimg']['path'];
+    $ruta .= "/";
+    switch ($id){
+      case $id < 10: $ruta .= "00$id"; break;
+      case $id < 100: $ruta .= "0$id"; break;
+      default: $ruta .= $id;
     }
+    $ruta .= "." . $aConfig['pokeimg']['driver'];
+    
+    return $ruta;
   }
   
 }

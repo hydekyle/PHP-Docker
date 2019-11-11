@@ -7,6 +7,10 @@ return [
       'path' => __DIR__ . '/../src/views',
       'twig' => [ 'cache' => false ]
     ],
+    'pokeimg' => [
+      'driver' => 'png',
+      'path' => '/images'
+    ],
     'db' => [
       'driver' => 'json',
       'mysql' => [
@@ -28,7 +32,7 @@ return [
         'driver' => 'txt',
         'filename' => 'phrases.txt',
         'path' => __DIR__ . '/../database'
+        ]
       ]
     ]
-  ]
 ];
