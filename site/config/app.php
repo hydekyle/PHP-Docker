@@ -12,7 +12,7 @@ return [
       'path' => '/images'
     ],
     'db' => [
-      'driver' => 'json',
+      'driver' => 'mysql',
       'mysql' => [
         'driver' => 'mysql',
         'host' => '192.168.1.111:3344',

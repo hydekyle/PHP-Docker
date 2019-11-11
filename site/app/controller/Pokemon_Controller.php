@@ -6,7 +6,7 @@ use Psr\Container\ContainerInterface as Container,
     Psr\Http\Message\ServerRequestInterface as Request,
     Psr\Http\Message\ResponseInterface as Response,
 
-    App\Models\Pokemon_Model;
+    Model\Pokemon_Model;
 
 class Pokemon_Controller {
 
@@ -18,23 +18,37 @@ class Pokemon_Controller {
     $this -> cContainer = $cContainer; 
   }
 
-  public function getall (Request $rRequest, Response $rResponse) {
+  // public function getall (Request $rRequest, Response $rResponse) {
 
+  //   $aConfig = $this -> cContainer -> get('config');
+
+  //   $aData = ($aConfig['db']['driver'] == 'json') ? json_decode(file_get_contents($this -> cContainer -> db['path'] . '/' . $this -> cContainer -> db['filename']), true) : $this -> cContainer -> db -> table('pokemons') -> get();
+
+  //   $aParameters = [
+  //     'aPage' =>  [
+  //       'strTitle' => 'Welcome - Slim + Twig',
+  //       'strDescription' => 'Welcome to the oficial page Slim + Twig.',
+  //       'strType' => 'Controller'
+  //     ],
+  //     'aPokemons' => $aData
+  //   ];
+
+  //   return $this -> cContainer -> view -> render($rResponse, 'pokemons.twig', $aParameters);
+
+  // }
+
+  protected function get_png_route($id){
     $aConfig = $this -> cContainer -> get('config');
-
-    $aData = ($aConfig['db']['driver'] == 'json') ? json_decode(file_get_contents($this -> cContainer -> db['path'] . '/' . $this -> cContainer -> db['filename']), true) : $this -> cContainer -> db -> table('pokemons') -> get();
-
-    $aParameters = [
-      'aPage' =>  [
-        'strTitle' => 'Welcome - Slim + Twig',
-        'strDescription' => 'Welcome to the oficial page Slim + Twig.',
-        'strType' => 'Controller'
-      ],
-      'aPokemons' => $aData
-    ];
-
-    return $this -> cContainer -> view -> render($rResponse, 'pokemons.twig', $aParameters);
-
+    $ruta = $aConfig['pokeimg']['path'];
+    $ruta .= "/";
+    switch ($id){
+      case $id < 10: $ruta .= "00$id"; break;
+      case $id < 100: $ruta .= "0$id"; break;
+      default: $ruta .= $id;
+    }
+    $ruta .= "." . $aConfig['pokeimg']['driver'];
+    
+    return $ruta;
   }
 
   protected function show_pokemon($poke){
@@ -48,13 +62,6 @@ class Pokemon_Controller {
     $strHTML .= '<strong>TIPO: </strong>' . substr($strTypes, 0, -1) . '<br>';
   
     echo $strHTML;
-  }
-
-  protected function types_to_string($types){
-    $strTypes = '';
-    foreach($types as $t) 
-      $strTypes .= " $t +";
-    return $strTypes;
   }
 
   protected function get_pokemon($id){
@@ -88,35 +95,25 @@ class Pokemon_Controller {
   }
 
   public function twig_get_by_id(Request $rRequest, Response $rResponse, $aArgs){
+    $aData = $this -> cContainer -> db -> table('pokemons') -> get();
     $pokeID = $aArgs['id'];
-    $pokemon = $this -> get_pokemon($pokeID);
+    $pokemon = $aData[$pokeID - 1];
+    //d($pokemon -> types);
     if ($pokemon != null){
       $aParameters = [
         'aPage' =>  [
           'poke_id' => $pokeID,
-          'poke_name' => $pokemon['name'],
-          'poke_types' => substr($this -> types_to_string($pokemon['types']), 0, -1),
-          'img_route' => $this -> get_png_route($pokeID)
+          'poke_name' => $pokemon -> name,
+          'poke_types' => $pokemon -> types,
+          'img_route' => $this -> get_png_route($pokeID),
+          'db_data' => $aData
         ]
       ];
+      
       return $this -> cContainer -> view -> render($rResponse, 'pokedex.twig', $aParameters);
     } 
     else
       return "Pokémon no encontrado";
-  }
-
-  protected function get_png_route($id){
-    $aConfig = $this -> cContainer -> get('config');
-    $ruta = $aConfig['pokeimg']['path'];
-    $ruta .= "/";
-    switch ($id){
-      case $id < 10: $ruta .= "00$id"; break;
-      case $id < 100: $ruta .= "0$id"; break;
-      default: $ruta .= $id;
-    }
-    $ruta .= "." . $aConfig['pokeimg']['driver'];
-    
-    return $ruta;
   }
   
 }

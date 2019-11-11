@@ -18,28 +18,27 @@
     document.querySelector(".poke_name").innerHTML = myName.toUpperCase();
     
 
-  showTypes();
+    showTypes();
 
 
 
     function showTypes(){
-      let myTypes = " {{aPage.poke_types}} ";
-      let types = myTypes.split('+');
-      let type1 = types[0].replace(/ /g,'');
+      let myTypes = "{{aPage.poke_types}}";
+      //console.log(JSON.parse(myTypes));
       let dType1 = document.querySelector("#type1");
       let dType2 = document.querySelector("#type2");
-      dType1.innerHTML = type1;
+      dType1.innerHTML = myTypes;
       dType1.style.color = getColorByType(type1);
-      if (types.length > 1){
-        let type2 = types[1].replace(/ /g,'');
+      {# if (types.length > 1){
+        let type2 = types[1];
         dType2.innerHTML = type2;
+        console.log(type2);
         dType2.style.color = getColorByType(type2);
-      }
+      } #}
         
     }
 
     function getColorByType(type){
-      console.log(type);
       switch(type){
         case 'bug': return 'green';
         case 'fire': return 'red';
